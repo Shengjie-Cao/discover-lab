@@ -4,28 +4,25 @@ import { siteConfig } from "@/data/siteConfig";
 import { publications } from "@/data/publications";
 import { news } from "@/data/news";
 import SectionHeading from "@/components/shared/SectionHeading";
-
-const highlights = [
-  {
-    icon: BookOpen,
-    title: "Research Focus",
-    description: "Cutting-edge work in machine learning, NLP, computer vision, and trustworthy AI.",
-  },
-  {
-    icon: Award,
-    title: "Key Results",
-    description: "Multiple best paper awards and top-tier publications across premier venues.",
-  },
-  {
-    icon: Handshake,
-    title: "Collaboration",
-    description: "Active partnerships with industry leaders and international research institutions.",
-  },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function HomePage() {
+  const { t } = useLanguage();
   const featuredPubs = publications.slice(0, 6);
   const latestNews = news.slice(0, 3);
+
+  const highlights = [
+    { icon: BookOpen, title: t("home.researchFocus"), description: t("home.researchFocusDesc") },
+    { icon: Award, title: t("home.keyResults"), description: t("home.keyResultsDesc") },
+    { icon: Handshake, title: t("home.collaboration"), description: t("home.collaborationDesc") },
+  ];
+
+  const metricsLabels: Record<string, string> = {
+    Publications: t("metrics.publications"),
+    Students: t("metrics.students"),
+    Projects: t("metrics.projects"),
+    Collaborations: t("metrics.collaborations"),
+  };
 
   return (
     <>
@@ -36,7 +33,7 @@ export default function HomePage() {
             {siteConfig.groupName}
           </h1>
           <p className="mt-4 text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            {siteConfig.tagline}
+            {t("site.tagline")}
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
             {siteConfig.department}, {siteConfig.university}
@@ -46,13 +43,13 @@ export default function HomePage() {
               to="/join"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-md bg-primary text-primary-foreground font-medium text-sm hover:opacity-90 transition-opacity"
             >
-              Join Us <ArrowRight size={16} />
+              {t("home.joinUs")} <ArrowRight size={16} />
             </Link>
             <Link
               to="/publications"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-md border border-border text-foreground font-medium text-sm hover:bg-muted transition-colors"
             >
-              <FileText size={16} /> Publications
+              <FileText size={16} /> {t("home.publications")}
             </Link>
           </div>
         </div>
@@ -64,7 +61,7 @@ export default function HomePage() {
           {siteConfig.metrics.map((m) => (
             <div key={m.label}>
               <div className="text-3xl font-heading font-bold text-primary">{m.value}</div>
-              <div className="text-sm text-muted-foreground mt-1">{m.label}</div>
+              <div className="text-sm text-muted-foreground mt-1">{metricsLabels[m.label] ?? m.label}</div>
             </div>
           ))}
         </div>
@@ -75,10 +72,7 @@ export default function HomePage() {
         <div className="container-wide mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {highlights.map((h) => (
-              <div
-                key={h.title}
-                className="rounded-lg border border-border bg-card p-6 hover:shadow-md transition-shadow"
-              >
+              <div key={h.title} className="rounded-lg border border-border bg-card p-6 hover:shadow-md transition-shadow">
                 <h.icon className="text-primary mb-4" size={28} />
                 <h3 className="font-heading text-xl font-semibold text-card-foreground">{h.title}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{h.description}</p>
@@ -91,7 +85,7 @@ export default function HomePage() {
       {/* Featured Publications */}
       <section className="section-padding bg-muted/30">
         <div className="container-wide mx-auto">
-          <SectionHeading title="Featured Publications" subtitle="Selected recent works from our group." />
+          <SectionHeading title={t("home.featuredPubs")} subtitle={t("home.featuredPubsSub")} />
           <div className="space-y-4">
             {featuredPubs.map((pub) => (
               <div key={pub.id} className="rounded-lg border border-border bg-card p-5 hover:shadow-sm transition-shadow">
@@ -99,20 +93,14 @@ export default function HomePage() {
                   <div className="flex-1 min-w-0">
                     <h4 className="font-body text-sm font-semibold text-card-foreground">{pub.title}</h4>
                     <p className="text-xs text-muted-foreground mt-1">{pub.authors.join(", ")}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {pub.venue}, {pub.year}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{pub.venue}, {pub.year}</p>
                   </div>
                   <div className="flex gap-2 shrink-0">
                     {pub.pdfUrl && (
-                      <a href={pub.pdfUrl} className="text-xs px-2 py-1 rounded bg-accent text-accent-foreground hover:opacity-80">
-                        PDF
-                      </a>
+                      <a href={pub.pdfUrl} className="text-xs px-2 py-1 rounded bg-accent text-accent-foreground hover:opacity-80">PDF</a>
                     )}
                     {pub.codeUrl && (
-                      <a href={pub.codeUrl} className="text-xs px-2 py-1 rounded bg-accent text-accent-foreground hover:opacity-80">
-                        Code
-                      </a>
+                      <a href={pub.codeUrl} className="text-xs px-2 py-1 rounded bg-accent text-accent-foreground hover:opacity-80">Code</a>
                     )}
                   </div>
                 </div>
@@ -120,11 +108,8 @@ export default function HomePage() {
             ))}
           </div>
           <div className="mt-8 text-center">
-            <Link
-              to="/publications"
-              className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
-            >
-              View all publications <ExternalLink size={14} />
+            <Link to="/publications" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
+              {t("home.viewAllPubs")} <ExternalLink size={14} />
             </Link>
           </div>
         </div>
@@ -133,7 +118,7 @@ export default function HomePage() {
       {/* Latest News */}
       <section className="section-padding">
         <div className="container-wide mx-auto">
-          <SectionHeading title="Latest News" />
+          <SectionHeading title={t("home.latestNews")} />
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {latestNews.map((item) => (
               <Link
@@ -154,7 +139,7 @@ export default function HomePage() {
           </div>
           <div className="mt-8 text-center">
             <Link to="/news" className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline">
-              All news <ExternalLink size={14} />
+              {t("home.allNews")} <ExternalLink size={14} />
             </Link>
           </div>
         </div>

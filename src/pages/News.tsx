@@ -2,10 +2,12 @@ import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { news, NewsTag } from "@/data/news";
 import SectionHeading from "@/components/shared/SectionHeading";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const tags: NewsTag[] = ["Paper", "Award", "Talk", "Open-source"];
 
 export default function NewsPage() {
+  const { t } = useLanguage();
   const [tagFilter, setTagFilter] = useState<NewsTag | "All">("All");
 
   const filtered = useMemo(
@@ -19,7 +21,7 @@ export default function NewsPage() {
   return (
     <div className="section-padding">
       <div className="container-wide mx-auto">
-        <SectionHeading title="News" subtitle="Updates, announcements, and highlights from our group." />
+        <SectionHeading title={t("news.title")} subtitle={t("news.subtitle")} />
 
         <div className="flex flex-wrap gap-2 mb-10">
           <button
@@ -30,7 +32,7 @@ export default function NewsPage() {
                 : "border-border text-muted-foreground hover:bg-muted"
             }`}
           >
-            All
+            {t("news.all")}
           </button>
           {tags.map((tag) => (
             <button
@@ -55,21 +57,17 @@ export default function NewsPage() {
               className="block rounded-lg border border-border bg-card p-5 hover:shadow-md transition-shadow group"
             >
               <div className="flex flex-wrap items-center gap-3 mb-2">
-                <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-accent text-accent-foreground">
-                  {item.tag}
-                </span>
+                <span className="px-2 py-0.5 text-xs font-medium rounded-full bg-accent text-accent-foreground">{item.tag}</span>
                 <span className="text-xs text-muted-foreground">{item.date}</span>
               </div>
-              <h3 className="font-heading text-lg font-semibold text-card-foreground group-hover:text-primary transition-colors">
-                {item.title}
-              </h3>
+              <h3 className="font-heading text-lg font-semibold text-card-foreground group-hover:text-primary transition-colors">{item.title}</h3>
               <p className="text-sm text-muted-foreground mt-2">{item.summary}</p>
             </Link>
           ))}
         </div>
 
         {filtered.length === 0 && (
-          <p className="text-center text-muted-foreground py-12">No news items match the selected filter.</p>
+          <p className="text-center text-muted-foreground py-12">{t("news.noMatch")}</p>
         )}
       </div>
     </div>

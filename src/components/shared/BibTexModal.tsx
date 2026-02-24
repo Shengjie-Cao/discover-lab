@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { X, Copy, Check } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface BibTexModalProps {
   bibtex: string;
@@ -9,6 +10,7 @@ interface BibTexModalProps {
 
 export default function BibTexModal({ bibtex, title, onClose }: BibTexModalProps) {
   const [copied, setCopied] = useState(false);
+  const { t } = useLanguage();
 
   const handleCopy = () => {
     navigator.clipboard.writeText(bibtex);
@@ -36,7 +38,7 @@ export default function BibTexModal({ bibtex, title, onClose }: BibTexModalProps
           className="mt-4 inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-md bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
         >
           {copied ? <Check size={14} /> : <Copy size={14} />}
-          {copied ? "Copied!" : "Copy to Clipboard"}
+          {copied ? t("pubs.copied") : t("pubs.copyClipboard")}
         </button>
       </div>
     </div>
