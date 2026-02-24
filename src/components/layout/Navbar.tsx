@@ -1,26 +1,32 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon, Languages } from "lucide-react";
 import { siteConfig } from "@/data/siteConfig";
+import { useLanguage } from "@/contexts/LanguageContext";
 
-const navLinks = [
-  { label: "Home", to: "/" },
-  { label: "Research", to: "/research" },
-  { label: "People", to: "/people" },
-  { label: "Publications", to: "/publications" },
-  { label: "News", to: "/news" },
-  { label: "Join Us", to: "/join" },
-  { label: "Contact", to: "/contact" },
+const navKeys = [
+  { key: "nav.home", to: "/" },
+  { key: "nav.research", to: "/research" },
+  { key: "nav.people", to: "/people" },
+  { key: "nav.publications", to: "/publications" },
+  { key: "nav.news", to: "/news" },
+  { key: "nav.joinUs", to: "/join" },
+  { key: "nav.contact", to: "/contact" },
 ];
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [dark, setDark] = useState(false);
   const location = useLocation();
+  const { lang, setLang, t } = useLanguage();
 
   const toggleDark = () => {
     setDark(!dark);
     document.documentElement.classList.toggle("dark");
+  };
+
+  const toggleLang = () => {
+    setLang(lang === "en" ? "zh" : "en");
   };
 
   return (
@@ -32,7 +38,7 @@ export default function Navbar() {
 
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-1">
-          {navLinks.map((link) => (
+          {navKeys.map((link) => (
             <Link
               key={link.to}
               to={link.to}
@@ -42,12 +48,20 @@ export default function Navbar() {
                   : "text-muted-foreground hover:text-foreground hover:bg-muted"
               }`}
             >
-              {link.label}
+              {t(link.key)}
             </Link>
           ))}
           <button
+            onClick={toggleLang}
+            className="ml-2 p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex items-center gap-1 text-sm"
+            aria-label="Toggle language"
+          >
+            <Languages size={18} />
+            <span className="text-xs font-medium">{lang === "en" ? "中" : "EN"}</span>
+          </button>
+          <button
             onClick={toggleDark}
-            className="ml-2 p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            className="p-2 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
             aria-label="Toggle dark mode"
           >
             {dark ? <Sun size={18} /> : <Moon size={18} />}
@@ -56,6 +70,14 @@ export default function Navbar() {
 
         {/* Mobile */}
         <div className="flex md:hidden items-center gap-2">
+          <button
+            onClick={toggleLang}
+            className="p-2 rounded-md text-muted-foreground hover:text-foreground flex items-center gap-1"
+            aria-label="Toggle language"
+          >
+            <Languages size={18} />
+            <span className="text-xs font-medium">{lang === "en" ? "中" : "EN"}</span>
+          </button>
           <button
             onClick={toggleDark}
             className="p-2 rounded-md text-muted-foreground hover:text-foreground"
@@ -76,7 +98,7 @@ export default function Navbar() {
       {/* Mobile menu */}
       {open && (
         <div className="md:hidden border-t border-border bg-background px-4 pb-4">
-          {navLinks.map((link) => (
+          {navKeys.map((link) => (
             <Link
               key={link.to}
               to={link.to}
@@ -87,7 +109,7 @@ export default function Navbar() {
                   : "text-muted-foreground hover:text-foreground hover:bg-muted"
               }`}
             >
-              {link.label}
+              {t(link.key)}
             </Link>
           ))}
         </div>
