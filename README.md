@@ -1,73 +1,59 @@
-# Welcome to your Lovable project
+# Academic Research Group Website
 
-## Project info
-
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
-
-## How can I edit this code?
-
-There are several ways of editing your application.
-
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+## Quick Start
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## Deploy to GitHub Pages (Free)
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Step 1: Update repo name
 
-**Use GitHub Codespaces**
+Open `vite.config.ts`, replace `REPO_NAME` with your actual GitHub repository name:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```ts
+base: process.env.GITHUB_PAGES ? '/your-repo-name/' : '/',
+```
 
-## What technologies are used for this project?
+### Step 2: Enable GitHub Pages
 
-This project is built with:
+1. Push code to GitHub
+2. Go to repo **Settings → Pages**
+3. Under **Build and deployment**, select **Source: GitHub Actions**
+4. The included `.github/workflows/deploy.yml` will auto-deploy on push to `main`
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Your site will be live at: `https://username.github.io/your-repo-name/`
 
-## How can I deploy this project?
+### How SPA routing works on GitHub Pages
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+GitHub Pages doesn't support SPA routing natively. This project includes:
+- `public/404.html` — redirects unknown paths to `index.html` with query params
+- A restore script in `index.html` — converts query params back to the real path
+- `BrowserRouter` uses `basename` matching the `base` path
 
-## Can I connect a custom domain to my Lovable project?
+### Local development
 
-Yes, you can!
+```sh
+npm run dev
+```
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+No `base` path is applied locally (only when `GITHUB_PAGES=true`).
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+## Tech Stack
+
+- React + TypeScript + Vite
+- Tailwind CSS + shadcn/ui
+- Framer Motion
+- react-router-dom (SPA)
+
+## Customization
+
+Edit files in `src/data/` to update content:
+- `siteConfig.ts` — group name, university, metrics
+- `people.ts` — team members
+- `publications.ts` — papers
+- `research.ts` — research areas
+- `news.ts` — announcements
+- `translations.ts` — bilingual UI strings
