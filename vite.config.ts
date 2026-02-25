@@ -3,22 +3,22 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
-// https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
-  // GitHub Pages: set to your repo name, e.g. '/my-repo/'
-  // For custom domain or local dev, use '/'
-  base: process.env.GITHUB_PAGES ? '/REPO_NAME/' : '/',
-  server: {
-    host: "::",
-    port: 8080,
-    hmr: {
-      overlay: false,
+export default defineConfig(({ mode }) => {
+  const repo = process.env.GITHUB_REPOSITORY?.split("/")[1]; // e.g. "discover-lab"
+  const isGhPages = !!process.env.GITHUB_PAGES;
+
+  return {
+    base: isGhPages && repo ? `/${repo}/` : "/",
+    server: {
+      host: "::",
+      port: 8080,
+      hmr: { overlay: false },
     },
-  },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
+    plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+    resolve: {
+      alias: {
+        "@": path.resolve(__dirname, "./src"),
+      },
     },
-  },
-}));
+  };
+});
